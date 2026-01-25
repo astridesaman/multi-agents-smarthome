@@ -1,6 +1,6 @@
 # 🏠 MAS Smart Home — Agents Intelligents
 
-Ce projet est une implémentation **simple et pédagogique** d’un **système multi-agents (MAS)** appliqué à une **smart home**, réalisée dans le cadre du cours *Agents Intelligents*.
+Ce projet est une implémentation d’un **système multi-agents (MAS)** appliqué à une **smart home**, réalisée dans le cadre du cours *Agents Intelligents*.
 
 L’objectif est de mettre en œuvre les concepts fondamentaux du **modèle BDI (Belief – Desire – Intention)** à travers un agent autonome capable de raisonner et d’agir dans un environnement.
 
