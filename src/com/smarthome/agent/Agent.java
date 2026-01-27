@@ -14,14 +14,10 @@ public abstract class Agent {
     protected BeliefBase beliefs;
     protected Intentions intentions;
     protected Environment environment;
-<<<<<<< HEAD
-    protected MessageBroker messageBroker;
-    protected int energy;
-    protected boolean active;
-=======
     protected int energy = 10; // max energy
     protected final int MAX_ENERGY = 10;
->>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
+    protected MessageBroker messageBroker;
+    private boolean active;
 
     public Agent(String name, AgentRole role, Environment env) {
         this.agentName = name;
@@ -52,15 +48,7 @@ public abstract class Agent {
      * Perception: gather information from environment
      */
     protected void perceive() {
-<<<<<<< HEAD
         beliefs.updateEnvironmentState(environment);
-=======
-        Set<String> dirty = environment.getDirtyRooms();
-        boolean laundry = environment.isLaundryNeeded();
-        Set<String> trash = environment.getRoomsWithTrash();
-        boolean central = environment.isCentralTrashFull();
-        beliefs.updateBeliefs(dirty, laundry, trash, central);
->>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
     }
 
     /**
@@ -78,7 +66,6 @@ public abstract class Agent {
      */
     protected abstract void deliberate();
 
-<<<<<<< HEAD
     /**
      * Action: execute intentions
      */
@@ -92,32 +79,6 @@ public abstract class Agent {
             energy -= 5;
         } else {
             energy -= 1;
-=======
-    protected void act() {
-        for (String intention : intentions.getIntentions()) {
-            if (intention.startsWith("clean ")) {
-                String room = intention.substring(6);
-                environment.cleanRoom(room);
-                System.out.println(agentName + " cleaned " + room);
-                energy -= 2;
-            } else if (intention.equals("do laundry")) {
-                environment.doLaundry();
-                System.out.println(agentName + " did the laundry");
-                energy -= 3;
-            } else if (intention.startsWith("empty trash ")) {
-                String room = intention.substring(12);
-                environment.emptyTrash(room);
-                System.out.println(agentName + " emptied trash in " + room);
-                energy -= 1;
-            } else if (intention.equals("take out trash")) {
-                environment.takeOutTrash();
-                System.out.println(agentName + " took out the trash");
-                energy -= 2;
-            } else if (intention.equals("rest")) {
-                energy = Math.min(MAX_ENERGY, energy + 2);
-                System.out.println(agentName + " is resting. Energy: " + energy);
-            }
->>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
         }
         if (energy < 0) energy = 0;
     }

@@ -2,64 +2,69 @@ package com.smarthome.environment;
 
 import java.util.*;
 
+import com.smarthome.agent.Agent;
+
 /**
  * Represents the smart apartment environment where agents operate.
- * Manages rooms, objects, tasks, and provides perception/action mechanisms.
  */
 public class Environment {
-<<<<<<< HEAD
+
     private Map<String, Room> rooms;
-    private List<Task> tasks;
     private Map<String, SmartObject> objects;
+    private List<Task> tasks;
+
+    private Set<String> roomsWithTrash;
+    private boolean laundryNeeded;
+    private boolean centralTrashFull;
+
+    private Random rand;
     private int timeStep;
     private static final int MAX_TIME_STEPS = 100;
-=======
-    private Set<String> dirtyRooms = new HashSet<>();
-    private Set<String> allRooms = new HashSet<>(Arrays.asList("kitchen", "livingroom", "bedroom"));
-    private boolean laundryNeeded = false;
-    private Set<String> roomsWithTrash = new HashSet<>();
-    private boolean centralTrashFull = false;
->>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
 
     public Environment() {
         this.rooms = new HashMap<>();
-        this.tasks = new ArrayList<>();
         this.objects = new HashMap<>();
+        this.tasks = new ArrayList<>();
+        this.roomsWithTrash = new HashSet<>();
+        this.rand = new Random();
         this.timeStep = 0;
-        
+
         initializeRooms();
         initializeObjects();
         generateInitialTasks();
     }
 
+    /* ---------- INITIALIZATION ---------- */
+
     private void initializeRooms() {
-        String[] roomNames = {"kitchen", "living_room", "bedroom", "bathroom"};
-        for (String name : roomNames) {
+        String[] names = {"kitchen", "living_room", "bedroom", "bathroom"};
+        for (String name : names) {
             rooms.put(name, new Room(name));
         }
     }
 
     private void initializeObjects() {
-        // Kitchen objects
-        SmartObject dishes = new SmartObject("dishes-1", SmartObject.ObjectType.DISHES, "kitchen", 5);
+        SmartObject dishes = new SmartObject("dishes-1",
+                SmartObject.ObjectType.DISHES, "kitchen", 5);
         dishes.setDirty(true);
-        objects.put("dishes-1", dishes);
-        rooms.get("kitchen").addObject(dishes);
+        addObject(dishes);
 
-        // Living room objects
-        SmartObject garbage = new SmartObject("garbage-1", SmartObject.ObjectType.GARBAGE, "living_room", 3);
-        objects.put("garbage-1", garbage);
-        rooms.get("living_room").addObject(garbage);
+        SmartObject garbage = new SmartObject("garbage-1",
+                SmartObject.ObjectType.GARBAGE, "living_room", 3);
+        addObject(garbage);
 
-        // Bedroom objects
-        SmartObject furniture = new SmartObject("furniture-1", SmartObject.ObjectType.FURNITURE, "bedroom", 1);
-        objects.put("furniture-1", furniture);
-        rooms.get("bedroom").addObject(furniture);
+        SmartObject furniture = new SmartObject("furniture-1",
+                SmartObject.ObjectType.FURNITURE, "bedroom", 1);
+        addObject(furniture);
 
-        // Tools
-        SmartObject cleaningTools = new SmartObject("tools-1", SmartObject.ObjectType.CLEANING_TOOL, "kitchen", 3);
-        objects.put("tools-1", cleaningTools);
-        rooms.get("kitchen").addObject(cleaningTools);
+        SmartObject tools = new SmartObject("tools-1",
+                SmartObject.ObjectType.CLEANING_TOOL, "kitchen", 3);
+        addObject(tools);
+    }
+
+    private void addObject(SmartObject obj) {
+        objects.put(obj.getId(), obj);
+        rooms.get(obj.getLocation()).addObject(obj);
     }
 
     private void generateInitialTasks() {
@@ -70,25 +75,33 @@ public class Environment {
         tasks.add(new Task("task-5", Task.TaskType.ORGANIZE_OBJECTS, "bedroom", 1, 7));
     }
 
+    /* ---------- SIMULATION ---------- */
+
     public void simulateTimeStep() {
         timeStep++;
-        // Process ongoing tasks
+
         for (Task task : tasks) {
             if (task.isOngoing()) {
                 task.decreaseTime(1);
                 if (task.getTimeRemaining() <= 0) {
                     task.setStatus(Task.TaskStatus.COMPLETED);
-                    System.out.println("[ENV] Task " + task.getTaskId() + " completed!");
                 }
             }
+        }
+
+        // Random environment changes
+        for (Room room : rooms.values()) {
             if (rand.nextBoolean()) {
-                roomsWithTrash.add(room);
+                roomsWithTrash.add(room.getName());
+                room.setClean(false);
             }
         }
+
         laundryNeeded = rand.nextBoolean();
     }
 
-    // Perception methods
+    /* ---------- PERCEPTION ---------- */
+
     public Set<String> getDirtyRooms() {
         Set<String> dirty = new HashSet<>();
         for (Room room : rooms.values()) {
@@ -100,161 +113,95 @@ public class Environment {
     }
 
     public Set<Task> getPendingTasks() {
-        Set<Task> pending = new HashSet<>();
+        Set<Task> result = new HashSet<>();
         for (Task task : tasks) {
-            if (task.isPending()) {
-                pending.add(task);
-            }
+            if (task.isPending()) result.add(task);
         }
-        return pending;
+        return result;
     }
 
     public Set<Task> getOngoingTasks() {
-        Set<Task> ongoing = new HashSet<>();
+        Set<Task> result = new HashSet<>();
         for (Task task : tasks) {
-            if (task.isOngoing()) {
-                ongoing.add(task);
-            }
+            if (task.isOngoing()) result.add(task);
         }
-        return ongoing;
+        return result;
     }
 
     public Set<Task> getCompletedTasks() {
-        Set<Task> completed = new HashSet<>();
+        Set<Task> result = new HashSet<>();
         for (Task task : tasks) {
-            if (task.isCompleted()) {
-                completed.add(task);
-            }
+            if (task.isCompleted()) result.add(task);
         }
-        return completed;
+        return result;
     }
 
-    public Task getTaskById(String taskId) {
-        for (Task task : tasks) {
-            if (task.getTaskId().equals(taskId)) {
-                return task;
-            }
-        }
-        return null;
-    }
-
-    public Room getRoomByName(String roomName) {
-        return rooms.get(roomName);
-    }
-
-    public Collection<Room> getAllRooms() {
-        return rooms.values();
-    }
-
-    public SmartObject getObjectById(String objectId) {
-        return objects.get(objectId);
-    }
-
-    public Collection<SmartObject> getAllObjects() {
-        return objects.values();
-    }
-
-    // Action methods
-    public void cleanRoom(String roomName) {
-        Room room = rooms.get(roomName);
-        if (room != null) {
-            room.setClean(true);
-            System.out.println("[ENV] Room '" + roomName + "' is now clean");
-        }
-    }
-
-    public void markRoomDirty(String roomName) {
-        Room room = rooms.get(roomName);
-        if (room != null) {
-            room.setClean(false);
-            System.out.println("[ENV] Room '" + roomName + "' is now dirty");
-        }
-    }
+    /* ---------- ACTIONS ---------- */
 
     public boolean assignTaskToAgent(String taskId, String agentName) {
         Task task = getTaskById(taskId);
         if (task != null && task.isPending()) {
             task.setAssignedAgent(agentName);
             task.setStatus(Task.TaskStatus.ONGOING);
-            System.out.println("[ENV] Task " + taskId + " assigned to " + agentName);
             return true;
         }
         return false;
     }
 
-    public boolean completeTask(String taskId) {
-        Task task = getTaskById(taskId);
-        if (task != null && task.isOngoing()) {
-            task.setStatus(Task.TaskStatus.COMPLETED);
-            System.out.println("[ENV] Task " + taskId + " marked as completed");
-            return true;
+    public void cleanRoom(String roomName) {
+        Room room = rooms.get(roomName);
+        if (room != null) room.setClean(true);
+    }
+
+    public void emptyTrash(String room) {
+        roomsWithTrash.remove(room);
+        centralTrashFull = true;
+    }
+
+    public void takeOutTrash() {
+        centralTrashFull = false;
+    }
+
+    /* ---------- GETTERS ---------- */
+
+    public Task getTaskById(String id) {
+        for (Task t : tasks) {
+            if (t.getTaskId().equals(id)) return t;
         }
-        return false;
-    }
-
-    public boolean moveObject(String objectId, String newLocation) {
-        SmartObject obj = objects.get(objectId);
-        if (obj != null) {
-            Room oldRoom = rooms.get(obj.getLocation());
-            Room newRoom = rooms.get(newLocation);
-            if (oldRoom != null && newRoom != null) {
-                oldRoom.removeObject(obj);
-                obj.setLocation(newLocation);
-                newRoom.addObject(obj);
-                System.out.println("[ENV] Object " + objectId + " moved to " + newLocation);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public int getTimeStep() {
-        return timeStep;
-    }
-
-    public boolean isSimulationComplete() {
-        return timeStep >= MAX_TIME_STEPS || allTasksCompleted();
-    }
-
-    public boolean allTasksCompleted() {
-        for (Task task : tasks) {
-            if (!task.isCompleted()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void printStatus() {
-        System.out.println("\n=== Environment Status (T=" + timeStep + ") ===");
-        System.out.println("Rooms: " + getDirtyRooms().size() + " dirty");
-        System.out.println("Pending tasks: " + getPendingTasks().size());
-        System.out.println("Ongoing tasks: " + getOngoingTasks().size());
-        System.out.println("Completed tasks: " + getCompletedTasks().size());
+        return null;
     }
 
     public boolean isLaundryNeeded() {
         return laundryNeeded;
     }
 
-    public void doLaundry() {
-        laundryNeeded = false;
-    }
-
     public Set<String> getRoomsWithTrash() {
         return new HashSet<>(roomsWithTrash);
     }
 
-    public void emptyTrash(String room) {
-        roomsWithTrash.remove(room);
-        centralTrashFull = true; // emptying adds to central
+    public boolean isSimulationComplete() {
+        return timeStep >= MAX_TIME_STEPS || allTasksCompleted();
     }
 
-    public boolean isCentralTrashFull() {
-        return centralTrashFull;
+    private boolean allTasksCompleted() {
+        for (Task t : tasks) {
+            if (!t.isCompleted()) return false;
+        }
+        return true;
     }
 
-    public void takeOutTrash() {
-        centralTrashFull = false;
+    public void printStatus() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'printStatus'");
+    }
+
+    public String getTimeStep() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTimeStep'");
+    }
+
+    public List<Agent> getAllRooms() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllRooms'");
     }
 }

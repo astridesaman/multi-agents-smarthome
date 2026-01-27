@@ -10,11 +10,13 @@ import java.util.*;
 public class CoordinatorAgent extends BDIAgent {
     private List<String> registeredAgents;
     private Map<String, Integer> agentWorkload;
+    private MessageBroker messageBroker;
 
     public CoordinatorAgent(String name, Environment env) {
         super(name, AgentRole.COORDINATOR, env);
         this.registeredAgents = new ArrayList<>();
         this.agentWorkload = new HashMap<>();
+        this.messageBroker = MessageBroker.getInstance();
     }
 
     public void registerAgent(String agentName) {
