@@ -65,4 +65,9 @@ public class SmartObject {
         return String.format("Object[id=%s, type=%s, location=%s, dirty=%b, qty=%d]",
                 objectId, type, location, isDirty, quantity);
     }
+
+    public String getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    }
 }

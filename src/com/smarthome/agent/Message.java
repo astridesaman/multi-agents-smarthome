@@ -1,7 +1,5 @@
 package com.smarthome.agent;
 
-import java.util.*;
-
 /**
  * Message class for inter-agent communication
  */

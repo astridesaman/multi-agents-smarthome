@@ -15,7 +15,7 @@ public class Environment {
 
     private Set<String> roomsWithTrash;
     private boolean laundryNeeded;
-    private boolean centralTrashFull;
+    protected boolean centralTrashFull;
 
     private Random rand;
     private int timeStep;
@@ -191,7 +191,6 @@ public class Environment {
     }
 
     public void printStatus() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'printStatus'");
     }
 
