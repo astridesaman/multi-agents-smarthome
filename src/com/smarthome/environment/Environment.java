@@ -7,11 +7,19 @@ import java.util.*;
  * Manages rooms, objects, tasks, and provides perception/action mechanisms.
  */
 public class Environment {
+<<<<<<< HEAD
     private Map<String, Room> rooms;
     private List<Task> tasks;
     private Map<String, SmartObject> objects;
     private int timeStep;
     private static final int MAX_TIME_STEPS = 100;
+=======
+    private Set<String> dirtyRooms = new HashSet<>();
+    private Set<String> allRooms = new HashSet<>(Arrays.asList("kitchen", "livingroom", "bedroom"));
+    private boolean laundryNeeded = false;
+    private Set<String> roomsWithTrash = new HashSet<>();
+    private boolean centralTrashFull = false;
+>>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
 
     public Environment() {
         this.rooms = new HashMap<>();
@@ -73,7 +81,11 @@ public class Environment {
                     System.out.println("[ENV] Task " + task.getTaskId() + " completed!");
                 }
             }
+            if (rand.nextBoolean()) {
+                roomsWithTrash.add(room);
+            }
         }
+        laundryNeeded = rand.nextBoolean();
     }
 
     // Perception methods
@@ -219,5 +231,30 @@ public class Environment {
         System.out.println("Pending tasks: " + getPendingTasks().size());
         System.out.println("Ongoing tasks: " + getOngoingTasks().size());
         System.out.println("Completed tasks: " + getCompletedTasks().size());
+    }
+
+    public boolean isLaundryNeeded() {
+        return laundryNeeded;
+    }
+
+    public void doLaundry() {
+        laundryNeeded = false;
+    }
+
+    public Set<String> getRoomsWithTrash() {
+        return new HashSet<>(roomsWithTrash);
+    }
+
+    public void emptyTrash(String room) {
+        roomsWithTrash.remove(room);
+        centralTrashFull = true; // emptying adds to central
+    }
+
+    public boolean isCentralTrashFull() {
+        return centralTrashFull;
+    }
+
+    public void takeOutTrash() {
+        centralTrashFull = false;
     }
 }

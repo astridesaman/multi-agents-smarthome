@@ -5,6 +5,7 @@ package com.smarthome.bdi;
  * Each desire corresponds to a high-level objective the agent wants to achieve.
  */
 public enum Desire {
+<<<<<<< HEAD
     CLEAN_ENVIRONMENT("Clean all dirty rooms", 3),
     COMPLETE_TASKS("Complete assigned tasks", 2),
     MINIMIZE_ENERGY("Minimize energy consumption", 1),
@@ -27,4 +28,7 @@ public enum Desire {
     public int getPriority() {
         return priority;
     }
+=======
+    CLEAN, DO_LAUNDRY, TAKE_OUT_TRASH, REST
+>>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
 }

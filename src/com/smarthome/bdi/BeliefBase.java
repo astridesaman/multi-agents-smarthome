@@ -9,6 +9,7 @@ import com.smarthome.environment.*;
  * Stores beliefs about environment state, tasks, and other agents.
  */
 public class BeliefBase {
+<<<<<<< HEAD
     private Set<String> dirtyRooms;
     private Set<Task> knownTasks;
     private Set<Task> completedTasks;
@@ -23,6 +24,18 @@ public class BeliefBase {
         this.messageHistory = new ArrayList<>();
         this.agentCapabilities = new HashMap<>();
         this.updateCounter = 0;
+=======
+    private Set<String> dirtyRooms = new HashSet<>();
+    private boolean laundryNeeded = false;
+    private Set<String> roomsWithTrash = new HashSet<>();
+    private boolean centralTrashFull = false;
+
+    public void updateBeliefs(Set<String> perceivedDirtyRooms, boolean laundry, Set<String> trashRooms, boolean centralTrash) {
+        dirtyRooms = new HashSet<>(perceivedDirtyRooms);
+        laundryNeeded = laundry;
+        roomsWithTrash = new HashSet<>(trashRooms);
+        centralTrashFull = centralTrash;
+>>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
     }
 
     /**
@@ -47,6 +60,7 @@ public class BeliefBase {
         return new HashSet<>(dirtyRooms);
     }
 
+<<<<<<< HEAD
     public Set<Task> getPendingTasks() {
         Set<Task> pending = new HashSet<>();
         for (Task task : knownTasks) {
@@ -132,5 +146,17 @@ public class BeliefBase {
 
     public int getDirtyRoomCount() {
         return dirtyRooms.size();
+=======
+    public boolean isLaundryNeeded() {
+        return laundryNeeded;
+    }
+
+    public Set<String> getRoomsWithTrash() {
+        return new HashSet<>(roomsWithTrash);
+    }
+
+    public boolean isCentralTrashFull() {
+        return centralTrashFull;
+>>>>>>> 3d89eaa101651dd6fa926a11f07f3b8b917d33ca
     }
 }
