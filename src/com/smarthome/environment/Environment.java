@@ -40,7 +40,7 @@ public class Environment {
         String[] names = {"kitchen", "living_room", "bedroom", "bathroom"};
         for (String name : names) {
             rooms.put(name, new Room(name));
-        }
+        } 
     }
 
     private void initializeObjects() {
