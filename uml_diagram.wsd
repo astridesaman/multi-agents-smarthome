@@ -1,0 +1,146 @@
+@startuml test
+
+title Smart Home Multi-Agent System UML
+
+' =========================
+' ===== ENVIRONMENT =======
+' =========================
+
+class Environment {
+    - rooms : List<Room>
+    - tasks : List<Task>
+    + addTask()
+    + updateTaskState()
+    + getTasks()
+}
+
+class Room {
+    - name : String
+    - objects : List<SmartObject>
+}
+
+class SmartObject {
+    - id : String
+    - type : String
+    - location : Room
+}
+
+class Task {
+    - id : String
+    - type : TaskType
+    - state : TaskState
+    - priority : int
+    - duration : int
+    - location : Room
+    + startTask()
+    + completeTask()
+}
+
+Environment "1" -- "*" Room
+Environment "1" -- "*" Task
+Room "1" -- "*" SmartObject
+Task "*" --> "1" Room
+
+' =========================
+' ===== BDI COMPONENTS ====
+' =========================
+
+class BeliefBase {
+    - knownTasks : List<Task>
+    - environmentState : String
+    + updateBeliefs()
+}
+
+class Desire {
+    - goal : String
+}
+
+class Intentions {
+    - actions : Stack<String>
+    + pushAction()
+    + popAction()
+}
+
+' =========================
+' ===== COMMUNICATION =====
+' =========================
+
+class Message {
+    - sender : String
+    - receiver : String
+    - content : String
+}
+
+class MessageBroker {
+    - instance : MessageBroker
+    + sendMessage()
+    + receiveMessages()
+}
+
+MessageBroker --> Message
+
+' =========================
+' ===== AGENTS ============
+' =========================
+
+abstract class Agent {
+    - id : String
+    - energy : int
+    - role : AgentRole
+    + perceive(Environment)
+    + decide()
+    + act(Environment)
+    + consumeEnergy()
+}
+
+abstract class BDIAgent {
+    - beliefs : BeliefBase
+    - desires : List<Desire>
+    - intentions : Intentions
+    + deliberate()
+}
+
+class ReactiveAgent {
+    + react()
+}
+
+Agent <|-- BDIAgent
+Agent <|-- ReactiveAgent
+
+BDIAgent --> BeliefBase
+BDIAgent --> Desire
+BDIAgent --> Intentions
+
+Agent --> MessageBroker
+Agent --> Environment
+
+' =========================
+' ===== SPECIALIZED AGENTS
+' =========================
+
+class CleaningAgent
+class DishwasherAgent
+class GarbageCollectorAgent
+class OrganizerAgent
+class CoordinatorAgent
+
+BDIAgent <|-- CleaningAgent
+BDIAgent <|-- DishwasherAgent
+BDIAgent <|-- GarbageCollectorAgent
+BDIAgent <|-- OrganizerAgent
+BDIAgent <|-- CoordinatorAgent
+
+' =========================
+' ===== SIMULATOR =========
+' =========================
+
+class SmartHomeSimulator {
+    - environment : Environment
+    - agents : List<Agent>
+    + runSimulation()
+}
+
+SmartHomeSimulator --> Environment
+SmartHomeSimulator --> Agent
+
+@enduml
