@@ -2,7 +2,7 @@ package com.smarthome.environment;
 
 import java.util.*;
 
-import com.smarthome.agent.Agent;
+import com.smarthome.environment.SmartObject;
 
 /**
  * Represents the smart apartment environment where agents operate.
@@ -40,25 +40,41 @@ public class Environment {
         String[] names = {"kitchen", "living_room", "bedroom", "bathroom"};
         for (String name : names) {
             rooms.put(name, new Room(name));
-        } 
+        }
     }
 
     private void initializeObjects() {
-        SmartObject dishes = new SmartObject("dishes-1",
-                SmartObject.ObjectType.DISHES, "kitchen", 5);
+        SmartObject dishes = new SmartObject(
+                "dishes-1",
+                SmartObject.ObjectType.DISHES,
+                "kitchen",
+                5
+        );
         dishes.setDirty(true);
         addObject(dishes);
 
-        SmartObject garbage = new SmartObject("garbage-1",
-                SmartObject.ObjectType.GARBAGE, "living_room", 3);
+        SmartObject garbage = new SmartObject(
+                "garbage-1",
+                SmartObject.ObjectType.GARBAGE,
+                "living_room",
+                3
+        );
         addObject(garbage);
 
-        SmartObject furniture = new SmartObject("furniture-1",
-                SmartObject.ObjectType.FURNITURE, "bedroom", 1);
+        SmartObject furniture = new SmartObject(
+                "furniture-1",
+                SmartObject.ObjectType.FURNITURE,
+                "bedroom",
+                1
+        );
         addObject(furniture);
 
-        SmartObject tools = new SmartObject("tools-1",
-                SmartObject.ObjectType.CLEANING_TOOL, "kitchen", 3);
+        SmartObject tools = new SmartObject(
+                "tools-1",
+                SmartObject.ObjectType.CLEANING_TOOL,
+                "kitchen",
+                3
+        );
         addObject(tools);
     }
 
@@ -150,11 +166,14 @@ public class Environment {
 
     public void cleanRoom(String roomName) {
         Room room = rooms.get(roomName);
-        if (room != null) room.setClean(true);
+        if (room != null) {
+            room.setClean(true);
+            roomsWithTrash.remove(roomName);
+        }
     }
 
-    public void emptyTrash(String room) {
-        roomsWithTrash.remove(room);
+    public void emptyTrash(String roomName) {
+        roomsWithTrash.remove(roomName);
         centralTrashFull = true;
     }
 
@@ -190,17 +209,35 @@ public class Environment {
         return true;
     }
 
+    /* ---------- DISPLAY & UTILITIES ---------- */
+
     public void printStatus() {
-        throw new UnsupportedOperationException("Unimplemented method 'printStatus'");
+        System.out.println("\n🏠 Environment Status");
+        System.out.println("   Time step: " + timeStep);
+
+        System.out.println("   Dirty rooms:");
+        if (getDirtyRooms().isEmpty()) {
+            System.out.println("     - None");
+        } else {
+            for (String room : getDirtyRooms()) {
+                System.out.println("     - " + room);
+            }
+        }
+
+        System.out.println("   Tasks:");
+        for (Task task : tasks) {
+            System.out.println("     - " + task);
+        }
+
+        System.out.println("   Laundry needed: " + (laundryNeeded ? "Yes" : "No"));
+        System.out.println("   Central trash full: " + (centralTrashFull ? "Yes" : "No"));
     }
 
     public String getTimeStep() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTimeStep'");
+        return String.valueOf(timeStep);
     }
 
-    public List<Agent> getAllRooms() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllRooms'");
+    public Collection<Room> getAllRooms() {
+        return rooms.values();
     }
 }
