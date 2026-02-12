@@ -2,7 +2,7 @@ package com.smarthome.environment;
 
 import java.util.*;
 
-import com.smarthome.environment.SmartObject;
+// import com.smarthome.environment.SmartObject;
 
 /**
  * Represents the smart apartment environment where agents operate.
