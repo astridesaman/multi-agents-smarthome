@@ -90,33 +90,31 @@ Répondent **immédiatement** aux stimuli environnementaux sans délibération :
 ---
 
 ## 🔄 Cycle de l'Agent
-
-```
-┌─────────────────────────────────┐
-│   AGENT PERCEPTION-DELIBERATION-ACTION CYCLE │
-├─────────────────────────────────┤
-│ 1. PERCEIVE                      │
-│    └─ Mettre à jour les croyances
-│       sur l'état de l'environnement
-│                                 │
-│ 2. PROCESS MESSAGES             │
-│    └─ Lire les messages d'autres agents
-│                                 │
-│ 3. DELIBERATE                   │
-│    └─ Analyser les croyances    │
-│    └─ Activér les désirs        │
-│    └─ Former les intentions     │
-│                                 │
-│ 4. ACT                          │
-│    └─ Exécuter les intentions   │
-│    └─ Modifier l'environnement  │
-│                                 │
-│ 5. CONSUME ENERGY               │
-│    └─ Réduire l'énergie selon activité
-└─────────────────────────────────┘
 ```
 
----
+┌─────────────────────────────────────────────┐  
+│  AGENT PERCEPTION-DELIBERATION-ACTION CYCLE │
+├─────────────────────────────────────────────┤
+│ 1. PERCEIVE                                 │
+│    └─ Mettre à jour les croyances           │
+│       sur l'état de l'environnement         │
+│                                             │
+│ 2. PROCESS MESSAGES                         │
+│    └─ Lire les messages d'autres agents     |
+│                                             |  
+│ 3. DELIBERATE                               │
+│    └─ Analyser les croyances                │
+│    └─ Activér les désirs                    │
+│    └─ Former les intentions                 │
+│                                             │
+│ 4. ACT                                      │
+│    └─ Exécuter les intentions               │ 
+│    └─ Modifier l'environnement              │
+│                                             │
+│ 5. CONSUME ENERGY                           │
+│    └─ Réduire l'énergie selon activité      │
+└─────────────────────────────────────────────┘
+```
 
 ## 🔄 Modèle BDI
 
@@ -208,7 +206,7 @@ Les agents peuvent **uniquement exécuter** les tâches compatibles avec leur r�
 
 ## ⚙️ Prérequis
 
-- Java **11 ou plus**
+- Java 
 - Aucun outil de build requis (ni Maven, ni Gradle)
 
 ---
@@ -255,7 +253,7 @@ Modifier `SmartHomeSimulator.main()` pour :
 ```
 ╔══════════════════════════════════════════════════════════╗
 ║                                                          ║
-║  SMART HOME MULTI-AGENT SYSTEM SIMULATION              ║
+║  SMART HOME MULTI-AGENT SYSTEM SIMULATION                ║
 ║                                                          ║
 ╚══════════════════════════════════════════════════════════╝
 
@@ -329,75 +327,6 @@ Message                  Structure de message
 ─────────────────────────────────────────────
 SmartHomeSimulator       Orchestration globale
 ```
-
----
-
-## 📈 Extensibilité
-
-Le système est conçu pour être facilement extensible :
-
-### Ajouter un Nouvel Type d'Agent BDI
-
-```java
-public class MonAgent extends BDIAgent {
-    public MonAgent(String name, Environment env) {
-        super(name, AgentRole.MON_ROLE, env);
-    }
-    
-    @Override
-    protected void deliberate() {
-        // Votre logique de délibération
-        Set<Task> pendingTasks = beliefs.getPendingTasks();
-        // ... analyser les tâches et former les intentions
-    }
-}
-```
-
-### Ajouter de Nouvelles Tâches
-
-1. Ajouter à `Task.TaskType` :
-```java
-public enum TaskType {
-    CLEAN_ROOM, WASH_DISHES, THROW_GARBAGE, ORGANIZE_OBJECTS, MA_NOUVELLE_TACHE
-}
-```
-
-2. Ajouter à `Task.TaskStatus` si nécessaire
-
-3. Créer un agent spécialisé pour cette tâche
-
-### Ajouter des Mécanismes de Coordination Avancés
-
-Étendre `CoordinatorAgent` ou créer de nouveaux protocoles :
-
-```java
-public class AdvancedCoordinator extends CoordinatorAgent {
-    // Implémenter des stratégies de négociation
-    // Implémenter du machine learning pour allocation optimale
-    // Etc.
-}
-```
-
-### Ajouter de Nouvelles Règles Réactives
-
-```java
-public class MonAgent extends ReactiveAgent {
-    @Override
-    protected void act() {
-        super.act();  // Appeler les règles par défaut
-        
-        // Ajouter vos propres règles condition-action
-        if (condition1) {
-            action1();
-        }
-        if (condition2) {
-            action2();
-        }
-    }
-}
-```
-
----
 
 ## 📝 Notes d'Implémentation
 
