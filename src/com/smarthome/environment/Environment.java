@@ -27,7 +27,7 @@ public class Environment {
         this.tasks = new ArrayList<>();
         this.roomsWithTrash = new HashSet<>();
         this.rand = new Random();
-        this.timeStep = 0;
+        this.timeStep = 0; 
 
         initializeRooms();
         initializeObjects();
