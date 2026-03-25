@@ -42,11 +42,15 @@ src/
         │   ├── BeliefBase.java               # Base de croyances améliorée
         │   ├── Desire.java                   # Énumération des désirs
         │   └── Intentions.java               # Intentions (actions à effectuer)
-        ├── environment/
+        ├── environment/                     
         │   ├── Environment.java              # Environnement principal
         │   ├── Room.java                     # Représentation d'une pièce
         │   ├── Task.java                     # Classe pour les tâches
         │   └── SmartObject.java              # Objets intelligents
+        ├── planning/     # Logique décisionnelle complexe
+        │   ├── State.java        # Représentation d'un état (S)
+        │   ├── Action.java       # Représentation d'une action (A)
+        │   └── MDPPlanner.java   # Le moteur de calcul (Solveur)
         └── simulator/
             └── SmartHomeSimulator.java       # Simulateur principal
 ```
